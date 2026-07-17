@@ -7,6 +7,9 @@ It combines a responsive Chrome side panel with a local Node.js service for resu
 
 ---
 
+## Demo
+[![Watch the Demo](https://img.youtube.com/vi/wH2_v_HkJcc/maxresdefault.jpg)](https://youtu.be/wH2_v_HkJcc)
+
 ## Features
 
 ### Multiple resume profiles
