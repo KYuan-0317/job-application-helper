@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Application Helper</title>
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <main>
+    <header class="app-header">
+      <div>
+        <h1>Job Application Helper</h1>
+        <p data-i18n="subtitle">Generate tailored cover letters and application answers from your resume and a pasted job description.</p>
+      </div>
+      <div class="header-settings">
+      <label class="interface-language">
+        <span data-i18n="interfaceLanguage">Interface</span>
+        <select id="interfaceLanguage" aria-label="Interface language">
+          <option value="en" selected>English</option>
+          <option value="zh-CN">简体中文</option>
+          <option value="zh-TW">繁體中文</option>
+          <option value="fr">Français</option>
+          <option value="es">Español</option>
+          <option value="de">Deutsch</option>
+          <option value="ja">日本語</option>
+          <option value="ko">한국어</option>
+        </select>
+      </label>
+      <label class="interface-language">
+        <span data-i18n="outputLanguage">Output language</span>
+        <select id="language" aria-label="Output language">
+          <option value="English" selected>English</option>
+          <option value="Simplified Chinese">简体中文</option>
+          <option value="Traditional Chinese">繁體中文</option>
+          <option value="French">Français</option>
+          <option value="Spanish">Español</option>
+          <option value="German">Deutsch</option>
+          <option value="Japanese">日本語</option>
+          <option value="Korean">한국어</option>
+        </select>
+      </label>
+      </div>
+    </header>
+
+    <section class="card">
+      <label for="resume" data-i18n="resumeLabel">1. Resume library (PDF / DOCX / TXT)</label>
+      <input id="resume" type="file" accept=".pdf,.docx,.txt,.md" multiple />
+      <div class="row">
+        <button id="uploadResume" class="secondary" data-i18n="addResumes">Add resume(s)</button>
+        <span id="resumeStatus" class="status" data-i18n="notUploaded">No resumes</span>
+      </div>
+      <div class="resume-list-heading sub-label" data-i18n="activeResume">Choose the active resume</div>
+      <div id="resumeList" class="resume-list" role="radiogroup" aria-label="Choose the active resume"></div>
+      <div id="resumeError" class="field-feedback" role="alert"></div>
+    </section>
+
+    <section class="card">
+      <label for="jobDescription" data-i18n="jobDescriptionLabel">2. Job description</label>
+      <textarea id="jobDescription" rows="10" data-i18n-placeholder="jobDescriptionPlaceholder" placeholder="Read it from the current page or paste the complete job description here."></textarea>
+      <div class="row job-description-actions">
+        <button id="readJobDescription" class="secondary" type="button" data-i18n="readCurrentPage">Read current page</button>
+        <span id="jobDescriptionStatus" class="status"></span>
+      </div>
+      <div id="jobError" class="field-feedback" role="alert"></div>
+    </section>
+
+    <section class="card requirements-card">
+      <div class="section-label" data-i18n="requirementsLabel">3. Cover letter requirements</div>
+      <details class="nested-requirements cover-settings-details">
+        <summary id="coverRequirementsSummary" data-i18n="coverSettings">Cover letter settings</summary>
+        <div class="details-content">
+          <div class="grid cover-options-grid">
+            <label>
+              <span data-i18n="coverType">Letter type</span>
+              <select id="requirementPreset">
+                <option value="standard" data-i18n="presetStandard">Standard tailored letter</option>
+                <option value="achievement" data-i18n="presetAchievement">Emphasize measurable achievements</option>
+                <option value="motivation" data-i18n="presetMotivation">Emphasize motivation and company fit</option>
+                <option value="entryLevel" data-i18n="presetEntryLevel">Student / entry-level</option>
+                <option value="careerChange" data-i18n="presetCareerChange">Career change</option>
+                <option value="concise" data-i18n="presetConcise">Concise and direct</option>
+                <option value="custom" data-i18n="presetCustom">Custom</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="tone">Tone</span>
+              <select id="tone">
+                <option value="professional">Professional</option>
+                <option value="confident">Confident</option>
+                <option value="warm">Warm</option>
+                <option value="concise">Concise</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="length">Length</span>
+              <select id="length">
+                <option value="short" data-i18n="lengthShort">Short</option>
+                <option value="medium" selected data-i18n="lengthMedium">Medium</option>
+                <option value="long" data-i18n="lengthLong">Long</option>
+              </select>
+            </label>
+          </div>
+          <label for="coverLetterRequirements" data-i18n="customCoverRequirements">Additional instructions (optional)</label>
+          <textarea id="coverLetterRequirements" rows="6" data-i18n-placeholder="requirementsPlaceholder" placeholder="Example: State the role in the opening; emphasize Python, SQL, and data projects; avoid repeating the resume; end by expressing interest in an interview."></textarea>
+          <p class="muted requirement-note" data-i18n="requirementsNote">You can edit a preset after selecting it. The generated letter will only use facts supported by the resume.</p>
+        </div>
+      </details>
+    </section>
+
+    <button id="generate" class="primary" data-i18n="generate">Generate cover letter</button>
+    <div id="coverError" class="field-feedback standalone-feedback" role="alert"></div>
+
+    <section class="card output-card">
+      <div class="output-header">
+        <label for="result" data-i18n="resultLabel">4. Generated result</label>
+        <div class="output-actions">
+          <select id="saveFormat" aria-label="Save format">
+            <option value="pdf" selected>PDF</option>
+            <option value="docx">DOCX</option>
+          </select>
+          <button id="saveResult" class="secondary" type="button" data-i18n="save">Save</button>
+        </div>
+      </div>
+      <textarea id="result" rows="10" data-i18n-placeholder="resultPlaceholder" placeholder="The generated cover letter will appear here and can be edited."></textarea>
+      <div id="saveError" class="field-feedback" role="alert"></div>
+    </section>
+
+
+    <section class="card application-answer-card">
+      <label for="applicationQuestion" data-i18n="applicationQuestionLabel">5. Job application question</label>
+      <textarea id="applicationQuestion" rows="5" data-i18n-placeholder="applicationQuestionPlaceholder" placeholder="Paste a job application question here, such as: Why are you interested in this role?"></textarea>
+      <details class="nested-requirements">
+        <summary data-i18n="answerRequirementsLabel">Answer requirements</summary>
+        <div class="details-content compact-details">
+          <div class="grid answer-options-grid">
+            <label><span data-i18n="answerTone">Answer tone</span>
+              <select id="answerTone"><option value="professional">Professional</option><option value="confident">Confident</option><option value="warm">Warm</option><option value="direct">Direct</option><option value="enthusiastic">Enthusiastic</option></select>
+            </label>
+            <label><span data-i18n="wordLimit">Word limit</span>
+              <select id="answerWordLimit"><option value="none" data-i18n="noLimit">No fixed limit</option><option value="50">50</option><option value="100">100</option><option value="150" selected>150</option><option value="200">200</option><option value="300">300</option></select>
+            </label>
+            <label><span data-i18n="answerStyle">Answer type</span>
+              <select id="answerStyle"><option value="balanced" data-i18n="answerBalanced">Balanced</option><option value="motivation" data-i18n="answerMotivation">Motivation / fit</option><option value="achievement" data-i18n="answerAchievement">Achievement-focused</option><option value="behavioral" data-i18n="answerBehavioral">Behavioral / STAR</option><option value="concise" data-i18n="answerConcise">Concise</option></select>
+            </label>
+          </div>
+          <label for="answerRequirements" data-i18n="customAnswerRequirements">Additional instructions (optional)</label>
+          <textarea id="answerRequirements" rows="3" data-i18n-placeholder="answerRequirementsPlaceholder" placeholder="Example: Mention my analytics project and avoid generic claims."></textarea>
+        </div>
+      </details>
+      <button id="generateAnswer" class="primary" type="button" data-i18n="generateAnswer">Generate answer</button>
+      <div id="answerError" class="field-feedback" role="alert"></div>
+      <div class="output-header application-answer-header">
+        <label for="applicationAnswer" data-i18n="applicationAnswerLabel">Generated answer</label>
+        <button id="copyAnswer" class="ghost" type="button" data-i18n="copy">Copy</button>
+      </div>
+      <textarea id="applicationAnswer" rows="10" data-i18n-placeholder="applicationAnswerPlaceholder" placeholder="The generated answer will appear here and can be edited."></textarea>
+    </section>
+
+    <section class="card api-card">
+      <label for="apiKey">OpenAI API Key</label>
+      <div class="secret-row">
+        <input id="apiKey" type="password" autocomplete="off" placeholder="sk-..." spellcheck="false" />
+        <button id="toggleApiKey" class="ghost" type="button" data-i18n="show">Show</button>
+      </div>
+      <div class="row">
+        <div class="button-group">
+          <button id="saveApiKey" class="secondary" type="button" data-i18n="saveKey">Save key</button>
+          <button id="clearApiKey" class="ghost" type="button" data-i18n="clear">Clear</button>
+        </div>
+        <span id="apiKeyStatus" class="status" data-i18n="notSaved">Not saved</span>
+      </div>
+      <div id="apiError" class="field-feedback" role="alert"></div>
+      <p class="security-note" data-i18n="securityNote">The key is stored only in this Chrome extension on your device and is sent to the local service when generating. Do not save it on a shared computer.</p>
+    </section>
+  </main>
+  <script src="sidepanel.js"></script>
+</body>
+</html>
